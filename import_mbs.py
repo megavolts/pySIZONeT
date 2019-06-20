@@ -14,7 +14,8 @@ import os
 import pickle
 
 import pandas as pd
-
+import sys
+sys.path.extend(['/home/megavolts/git/SIZONet'])
 from mbs import mbs
 
 DEBUG = 1
@@ -51,7 +52,7 @@ for mbs_path in mbs.list_folder(mbs_subdir):
 mbs_pkl = os.path.join(mbs_subdir, config_file['mbs']['pkl'])
 with open(mbs_pkl, 'wb') as f:
     pickle.dump(mbs_data, f)
-
+    print('Data export to %s' % mbs_pkl)
 
 # fu_path = os.path.join(config_file['SIZONet']['dir'], config_file['mbs']['subdir'], config_file['mbs']['freezup_obs'])
 # freezup_data = mbs.load_freezup(fu_path)

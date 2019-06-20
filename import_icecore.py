@@ -22,7 +22,7 @@ import seaice
 DEBUG = 1
 
 if os.uname()[1] == 'adak':
-    config = '/home/megavolts/git/SIZONet/BRW.conf'
+    config_fp = '/home/megavolts/git/SIZONet/mbs/BRW.conf'
 else:
     print('No directory defined for this machine')
 
@@ -33,11 +33,12 @@ logging.getLogger().setLevel(logging.INFO)
 # LOAD CONFIG
 # -------------------------------------------------------------------------------------------------------------------- #
 config_file = configparser.ConfigParser()
-config_file.read(config)
+config_file.read(config_fp)
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # IMPORTATION
 # -------------------------------------------------------------------------------------------------------------------- #
+# Import pickled ice core data
 core_subdir = os.path.join(config_file['SIZONet']['dir'], config_file['core']['subdir'])
 
 # generate ice core list

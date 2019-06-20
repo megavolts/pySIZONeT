@@ -52,7 +52,7 @@ def list_folder(dirpath, fileext='.csv', level=0):
         _ics.extend([dirName + '/' + f for f in fileList if f.endswith(fileext)])
 
     ics_set = set(_ics)
-    logger.info("Found %i ice core datafile in %s" % (ics_set.__len__(), dirpath))
+    logger.info("Found %i ice mass balance datafile in %s" % (ics_set.__len__(), dirpath))
 
     return ics_set
 

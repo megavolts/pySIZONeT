@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SIZONet.iml" filepath="$PROJECT_DIR$/.idea/SIZONet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../seaice/.idea/seaice.iml" filepath="$PROJECT_DIR$/../seaice/.idea/seaice.iml" />
     </modules>
   </component>
 </project>
