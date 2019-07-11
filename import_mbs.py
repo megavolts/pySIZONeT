@@ -21,7 +21,7 @@ from mbs import mbs
 DEBUG = 1
 
 if os.uname()[1] == 'adak':
-    config = '/home/megavolts/git/SIZONet/BRW.conf'
+    config = '/home/megavolts/git/SIZONet/mbs/BRW.conf'
 else:
     print('No directory defined for this machine')
 

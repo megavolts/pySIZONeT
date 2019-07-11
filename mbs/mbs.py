@@ -71,14 +71,14 @@ def read(mbs_path):
     # distance are positive from ice surface to ice bottom
     d_th = 10  # distance in between thermistor
 
-
-
     # h_th_i : distance from ice/snow interface for thermistor i
     #          distance are measured positive from ice surface downwards
     year = int(mbs_path.split('/')[-1].split('_')[-1].split('.')[0])
+    n_th_inv = []
     if year == 2007:
         h_th_0 = 5  # distance thermistor 0 from ice/snow interface
         n_th = 29  # number of thermistors
+
     elif 2008 <= year < 2010 or year == 2006:  # 2008, 2009
         h_th_0 = -40  # distance thermistor 0 from ice/snow interface, 40 cm above ice
         n_th = 29  # number of thermistors
@@ -101,6 +101,12 @@ def read(mbs_path):
             data = data.iloc[1:].reset_index(drop=True)  # bad data on first entry row
 
     # invalid data
+    if year == 2008:
+        n_th_inv = [10, 25, 27]
+    if year == 2009:
+        n_th_inv = [25, 27]
+    if 2011 == year or 2012 == year:
+        n_th_inv = [7]
     nan_value = -9999
     data = data.apply(pd.to_numeric)
     data = data.replace(nan_value, np.nan)
@@ -118,7 +124,6 @@ def read(mbs_path):
         if 'UTC time' in col:
             col_dict[col] = 'Time (hhmm)'
     data = data.rename(columns = col_dict)
-    del col_dict
 
     # parse datetime
     data['Year'] = data['Year'].astype(int)
@@ -131,6 +136,12 @@ def read(mbs_path):
 
     col = [c for c in data.columns if isinstance(c, (int,float))]
     data[col] = data[col].apply(pd.to_numeric)
+
+    # set invalid data for
+    for c_invalid in n_th_inv:
+        col_name = col_dict['T'+str(c_invalid)]
+        data[col_name] = np.nan
+
     return data
 
 
@@ -234,6 +245,7 @@ def generate_t_profile(mbs_data, day, location='BRW', hi=None):
             return seaice.Core(None, pd.NaT)
 
     # (1) Match day:
+    # TODO: match time if not 0
     day_data = mbs_data.loc[mbs_data.datetime.dt.date == day.date()]
 
     if day_data.empty:
@@ -242,6 +254,7 @@ def generate_t_profile(mbs_data, day, location='BRW', hi=None):
     else:
         depth = [c for c in day_data.columns if isinstance(c, (int, float))]
 
+        # TODO: if time is matched use:
         if day.hour is not 0:
             # try hourly average
             t_mbs = day_data.loc[day_data.datetime.dt.hour == day.hour, depth].mean(skipna=True).dropna()
@@ -257,7 +270,7 @@ def generate_t_profile(mbs_data, day, location='BRW', hi=None):
         location = location
 
         if day_data['Hi'].notnull().any():
-            h_mbs = day_data['Hi'].astype(float).mean()
+            h_mbs = day_data['Hi'].astype(float).median()
             c = 'hi measured by mbs;'
         elif hi is not None:
             h_mbs = hi
